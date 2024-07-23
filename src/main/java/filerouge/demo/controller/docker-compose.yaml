@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_DB=MyRh
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=0
+    ports:
+      - "5432:5432"
+    networks:
+      - my_network
+  spring-bk:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/MyRh
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=0
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
